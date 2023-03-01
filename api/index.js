@@ -1,17 +1,16 @@
-import express from 'express';
-import * as dotenv from 'dotenv';
-import cors from 'cors';
-import { Configuration, OpenAIApi } from 'openai';
+const express = require('express');
+const { Configuration, OpenAIApi } = require('openai');
+const cors = require('cors');
 
-dotenv.config();
+require('dotenv').config();
 
+const app = express();
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 const openai = new OpenAIApi(configuration);
 
-const app = express();
 app.use(cors());
 app.use(express.json());
 
@@ -44,3 +43,5 @@ app.post('/', async (req, res) => {
 });
 
 app.listen(5170, () => console.log('Server is running on port http://localhost:5170'));
+
+module.exports = app;
