@@ -16,7 +16,7 @@ app.use(express.json());
 
 app.get('/api', async (req, res) => {
   res.status(200).send({
-    message: 'Hello from codex code generator',
+    message: 'Hello from codex code generator!',
   });
 });
 
