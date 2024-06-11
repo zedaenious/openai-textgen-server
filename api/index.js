@@ -1,44 +1,37 @@
 const express = require('express');
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require('openai');
 const cors = require('cors');
 
 require('dotenv').config();
 
 const app = express();
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-const openai = new OpenAIApi(configuration);
+const openAI = new OpenAI();
 
 app.use(cors());
 app.use(express.json());
 
-app.get('/api', async (req, res) => {
-  res.status(200).send({
-    message: 'Hello from codex code generator!',
-  });
+app.get('/api', async (res) => {
+  res.status(200);
 });
 
-app.post('/api', async (req, res) => {
+app.post('/api/', async (req, res) => {
   try {
-    const prompt = req.body.prompt;
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: `${prompt}`,
-      temperature: 0, // refers to risk level taken
-      max_tokens: 3000,
-      top_p: 1,
-      frequency_penalty: 0.5,
-      presence_penalty: 0,
+    console.log('about to make create request to openai');
+    const completion = await openAI.completions.create({
+      model: 'gpt-3.5-turbo',
+      prompt: 'all pie is good pie',
+      max_tokens: 7,
+      temperature: 0,
     });
 
+    console.log(`${prompt} response from OpenAI servers: ${completion.choices[0]}`);
+
     res.status(200).send({
-      bot: response.data.choices[0].text,
+      openAiResponse: completion.choices[0]  
     });
-  } catch(err) {
-    console.log('error from openai.createCompletion', error);
-    res.status(500).send({ err });
+  } catch(error) {
+    console.log('error occurred: ', error);
+    res.status(500).send(error)
   }
 });
 
